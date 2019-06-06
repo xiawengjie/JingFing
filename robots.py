@@ -9,12 +9,13 @@
 import time
 import random
 import pymysql
+import os
 from wxpy import *
 from multiprocessing import Process
 class JFrobots_data():
     def return_text(self):
-        self.db = pymysql.connect("localhost","xwj","sGFmqgocQ7OnGIHI","JingFang")
-        self.ids = random.randint(1,100)
+        self.db = pymysql.connect("localhost","root","583467380","JingFang")
+        self.ids = random.randint(1,396)
         self.sql = "select onetext from provision where id=%d"%self.ids
         self.cursor1 = self.db.cursor()
         print(self.sql)
@@ -37,7 +38,7 @@ def auto_tiaoweng(bot,my_group,robot1):
         my_group.send_msg(response)
         time.sleep(30*60)
 def connect_mysql(sql):
-    db1 = pymysql.connect("localhost","xwj","sGFmqgocQ7OnGIHI","JingFang")
+    db1 = pymysql.connect("localhost","root","583467380","JingFang")
     print("连接成功")
     cursor1 = db1.cursor()
     print("创建执行对象")
@@ -57,7 +58,7 @@ def connect_mysql(sql):
 
 if __name__ == "__main__":
     robot1 = JFrobots_data()
-    bot = Bot()
+    bot = Bot(None,2,None,None,None,None)
     my_groups = bot.groups().search("经方机器人助手群")[0]
     t1 = Process(target=auto_tiaoweng,args=(bot,my_groups,robot1))
     t1.start()
@@ -87,11 +88,12 @@ if __name__ == "__main__":
                 #print(search_response)
                 list1_response = response.split("\n")
                 for i in list1_response:
-                    i = text + "\n" + i
-                    print(i)
-                    my_groups.send_msg(i)
-                    time.sleep(random.randint(1,3))
-                    
+                    i = text + "\n" + i + "\n"
+                    with open("%s.txt"%text,"a") as f:
+                        f.write(i)
+                save_file_path = r"./%s.txt"%text
+                my_groups.send_file(save_file_path)
+                os.remove(r"%s.txt"%text)
                 db.close()
             else:
                 pass
