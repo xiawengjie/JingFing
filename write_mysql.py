@@ -29,4 +29,5 @@ if __name__ == "__main__":
         print("\n")
         cursor.execute(sql)
     db.commit()
+    #hhh,这是添加的
     db.close()
